@@ -1,5 +1,3 @@
-import os
-
 from decouple import config
 from pathlib import Path
 
@@ -52,7 +50,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -114,10 +112,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = 'static/'
-STATICFILES_DIR = os.path.join('static/')
+STATICFILES_DIR = [BASE_DIR / 'static/']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder'
+]
+
 MEDIA_URL = 'media/'
-MEDIA_ROOT = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media/'
 
 
 # Default primary key field type
@@ -207,7 +210,7 @@ JAZZMIN_SETTINGS = {
     "hide_models": [],
 
     # List of apps (and/or models) to base side menu ordering off of (does not need to contain all apps/models)
-    "order_with_respect_to": ["auth", "news", "books.author", "books.book"],
+    "order_with_respect_to": ["auth", "news"],
 
     # Custom links to append to app groups, keyed on app name
     "custom_links": {
@@ -225,6 +228,8 @@ JAZZMIN_SETTINGS = {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
         "auth.Group": "fas fa-users",
+        "news.Category": "fa fa-list",
+        "news.News": "fa fa-newspaper",
     },
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",
@@ -261,4 +266,10 @@ JAZZMIN_SETTINGS = {
     "changeform_format_overrides": {"auth.user": "collapsible", "auth.group": "vertical_tabs"},
     # Add a language dropdown into the admin
     "language_chooser": False,
+}
+
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "flatly",
+    # "dark_mode_theme": "darkly",
 }
